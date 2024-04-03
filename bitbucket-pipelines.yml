@@ -1,0 +1,21 @@
+image: maven:3-eclipse-temurin-17
+
+definitions:
+  steps:
+    - step: &build-step
+        name: SonarQube analysis
+        caches:
+          - maven
+          - sonar
+        script:
+          - mvn verify sonar:sonar -Dsonar.projectKey=test -Dsonar.projectName='test'
+  caches:
+    sonar: ~/.sonar
+
+clone:
+  depth: full
+  
+pipelines:
+  branches:
+    '{main}':
+      - step: *build-step
